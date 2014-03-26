@@ -1,0 +1,33 @@
+Hello Admin,
+<br/>
+<br/>
+<table>
+	<thead>
+		<tr>
+			<th>Survey ID</th>
+			<th>User Passport Contact ID<th>
+			<th>Remarks</th>
+		</tr>
+	</thead>
+	<tbody>
+			 #foreach( $error in $errorList )
+                <tr>
+                    <td>
+                       $error.surveyId 
+                    </td>    
+                    <td>
+                        $error.userContactId
+                    </td>        
+                    <td>
+                        Not Able to Insert in Passport
+                    </td>
+                </tr>
+			#end
+	</tbody>
+</table>
+<br/>
+Failure Notice for above user contact Id.   
+<br/>
+<br/>
+Thank you,<br/>
+Support, Datacert

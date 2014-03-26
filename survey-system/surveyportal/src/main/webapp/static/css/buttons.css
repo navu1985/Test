@@ -1,0 +1,128 @@
+/* IMPORTANT: DO NOT AUTO-FORMAT THIS PAGE IN ECLIPSE!!!!!! IT MANGLES THE CSS HACKS */
+/* pardon the really nasty css hacks in here used to make everything look consistent across IE7, Firefox, Chrome */
+
+/******[ buttons ]******/
+a.button, button {
+	display: inline-block;
+	margin: 0 4px 2px 0;
+	background-color: #efefef;
+	border: 2px outset #dedede;
+	font-family: "Lucida Grande", Tahoma, Arial, Verdana, sans-serif;
+	font-size: 100%;
+	line-height: 130%;
+	text-decoration: none;
+	font-weight: bold;
+	cursor: pointer;
+	padding: 3px 10px 4px 10px; /* Links */
+	zoom: 1;
+	-webkit-border-radius:4px;
+	-moz-border-radius:4px;
+	border-radius:4px;
+    color: #565656;
+}
+
+a.button {
+	position:relative;
+	_top:1px;
+	*top:1px;
+}
+
+button {
+	width: auto;
+	overflow: visible;
+	padding: 2px 10px 1px 7px; /* IE6 */
+	position:inherit;
+}
+
+button[type] {
+	padding: 2px 10px 3px 7px; /* Firefox */
+    *padding: 2px 10px 1px 7px; /* IE7 */
+	line-height: 17px; /* Safari */
+}
+
+/******[ button styling ]******/ /* STANDARD BUTTONS */
+button:hover,a.button:hover {
+	background-color: #dff4ff;
+	border: 2px outset #c2e1ef;
+	color: #336699;
+}
+
+a.button:active {
+	background-color: #6299c5;
+	border: 2px outset #6299c5;
+	color: #fff;
+}
+
+/* POSITIVE ACTIONS */
+button.positive,a.positive {
+	color: #529214;
+}
+
+a.positive:hover,button.positive:hover {
+	background-color: #E6EFC2;
+	border: 2px outset #C6D880;
+	color: #529214;
+}
+
+a.positive:active {
+	background-color: #529214;
+	border: 2px outset #529214;
+	color: #fff;
+}
+
+/* NEGATIVE ACTIONS */
+a.negative,button.negative {
+	color: #d12f19;
+}
+
+a.negative:hover,button.negative:hover {
+	background-color: #fbe3e4;
+	border: 2px outset #fbc2c4;
+	color: #d12f19;
+}
+
+a.negative:active {
+	background-color: #d12f19;
+	border: 2px outset #d12f19;
+	color: #fff;
+}
+
+
+/******[ buttons with icons ]******/
+a.icon, button.icon, span.icon {
+    cursor: pointer;
+	padding-left: 26px;
+}
+
+a.notext, button.notext {
+    width:0;
+    padding-right:0;
+    overflow:hidden;
+}
+
+.icon {
+	background-repeat: no-repeat;
+	background-position: 6px 1px;
+}
+
+a.iconOnly, span.iconOnly {
+    display: inline-block;
+    margin: 0 10px 0 0;
+    padding:16px 0 0 0;
+    text-decoration: none;
+    cursor: pointer;
+    background-position: left top;
+    background-repeat: no-repeat;
+    overflow:hidden;
+    width:16px;
+    height:0;
+}
+
+span.iconPicker {
+	margin:0;
+}
+
+a.iconOnly:hover, .iconOnly:hover {
+	border:none;
+	background-color:transparent;
+}

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<taglib version="2.0" xmlns="http://java.sun.com/xml/ns/j2ee" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee web-jsptaglibrary_2_0.xsd">
+  <tlib-version>1.0</tlib-version>
+    <short-name>ct</short-name>
+    <uri>/WEB-INF/customTag</uri>
+    <function>
+        <name>contains</name>
+        <function-class>com.datacert.portal.util.SurveyUtils</function-class>
+        <function-signature>boolean contains(java.util.HashMap,java.lang.String)
+        </function-signature>
+    </function>
+</taglib>

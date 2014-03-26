@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:task="http://www.springframework.org/schema/task" xmlns:oxm="http://www.springframework.org/schema/oxm"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+				http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+				http://www.springframework.org/schema/oxm http://www.springframework.org/schema/oxm/spring-oxm-3.0.xsd
+				http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+				http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+	
+	
+	<!-- Portal Base Scan Package  -->
+	<context:component-scan base-package="com.datacert.portal" />
+	
+	<!-- Executor for Sending mails Batch of n(pool-size) Threads sending mails to user Concurrently -->
+	
+	<task:annotation-driven executor="mailExecutor"/>
+	<task:executor id="mailExecutor" pool-size="25"/>
+	
+	<!--Location of properties Files insert into placeHolder -->
+	<context:property-placeholder location="classpath:surveyportal.properties" />
+	
+	<mvc:interceptors>
+	    <!--Set expires HTTP header. Time in minutes should be specified in surveyportal.properties-->
+	    <bean id="webContentInterceptor" class="org.springframework.web.servlet.mvc.WebContentInterceptor">
+			<property name="cacheSeconds" value="${portal.cacheSeconds}"/>
+			<property name="useExpiresHeader" value="${portal.useExpiresHeader}"/>
+			<property name="useCacheControlHeader" value="${portal.useCacheControlHeader}"/>
+			<property name="requireSession" value="${portal.requireSession}"/>
+			<property name="useCacheControlNoStore" value="${portal.useCacheControlNoStore}" />
+			<property name="cacheMappings">
+			<props>
+				<prop key="/**/*.jsp">${portal.dynamic.cacheTimeInSeconds}</prop>
+				<prop key="/**/*.css">${portal.static.cacheTimeInSeconds}</prop>
+				<prop key="/**/*.js">${portal.static.cacheTimeInSeconds}</prop>
+				<prop key="/**/*.png">${portal.static.cacheTimeInSeconds}</prop>
+				<prop key="/**/*.ico">${portal.static.cacheTimeInSeconds}</prop>
+				<prop key="/**/*.gif">${portal.static.cacheTimeInSeconds}</prop>
+			</props>
+			</property>
+		</bean>
+	</mvc:interceptors>
+	
+	<!-- Object to XML Mapping Starts-->
+	<bean id="marshallingConverter" class="org.springframework.http.converter.xml.MarshallingHttpMessageConverter">
+		<constructor-arg ref="jaxbMarshaller"/>
+	    <property name="supportedMediaTypes">
+	    	<list>
+		    	<value>application/octet-stream</value>
+		    	<value>application/xml</value>
+		    	<value>application/json</value>
+		    	<value>text/html</value>
+		    	<value>text/plain</value>
+		    	<value>application/x-www-form-urlencoded</value>
+		    	<value>text/plain;charset=UTF-8</value>
+	    	</list>
+	    </property>
+	</bean>
+	
+	<bean id="jaxbMarshaller" class="org.springframework.oxm.jaxb.Jaxb2Marshaller">
+	    <property name="classesToBeBound">
+		  <list>
+		    <value>com.datacert.surveysystem.surveyresponse.SurveyResponseStatus</value>
+		    <value>com.datacert.surveysystem.surveyresponse.SurveyResponse</value>
+		    <value>com.datacert.surveysystem.surveyresponse.SurveyPullResponse</value>
+		    <value>com.datacert.surveysystem.surveyresponse.SurveyAckResponses</value>
+		    <value>com.datacert.surveysystem.surveyresponse.SurveyAckResponse</value>
+		    <value>com.datacert.surveysystem.surveyresponse.PullSurveys</value>
+		    <value>com.datacert.surveysystem.surveyresponse.PolicyResponseList</value>
+		    <value>com.datacert.surveysystem.policyresponse.PolicyAccessedResponsesXml</value>
+		    <value>com.datacert.surveysystem.policyresponse.PolicyAccessedResponseXml</value>
+		    <value>com.datacert.portal.dto.PolicyDto</value>
+		    
+		  </list>
+	    </property>
+	</bean>
+	
+	<!-- Object to XML Mapping End -->
+	
+	
+	<!-- Mail Starts -->
+	<!-- Mail Velocity Templates Path -->
+	<bean id="velocityEngine"
+		class="org.springframework.ui.velocity.VelocityEngineFactoryBean"
+		p:resourceLoaderPath="WEB-INF/vmtemplate" p:preferFileSystemAccess="false" />
+
+	<!-- Mail Settings-->
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"
+		p:host="${mail.smtp.host}"> 
+	
+		<!-- p:password="${mail.login.password}" -->
+		<property name="javaMailProperties">
+			<props>
+				<prop key="mail.smtp.auth">${mail.smtp.auth}</prop>
+				<prop key="mail.smtp.timeout">${mail.smtp.connectionTimeout}</prop>
+				<prop key="mail.smtp.starttls.enable">${mail.smtp.starttls.enable}</prop>
+				<prop key="mail.login.username">${mail.login.username}</prop>
+				<prop key="mail.login.password">${mail.login.password}</prop>
+			</props>
+		</property>
+	</bean>
+	<!-- Mail End -->
+
+	<!-- Message Bundle Bean Configuration -->
+	<bean id="messageSource"
+		class="org.springframework.context.support.ResourceBundleMessageSource">
+		<property name="basenames"><list><value>messages</value></list></property>
+	</bean>
+
+	<!-- MultipartFile Upload Bean Settings-->
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">    
+		  <property name="maxUploadSize" value="${surveyportal.maxFileUploadsizeInBytes}"/>
+	</bean> 
+	
+	<!-- Spring ViewResolver Bean Settings-->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" 
+		p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" p:order="2" />
+</beans>

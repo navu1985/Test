@@ -1,0 +1,61 @@
+package com.datacert.portal.infrastructure;
+
+import java.lang.annotation.Annotation;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.core.LocalVariableTableParameterNameDiscoverer;
+import org.springframework.core.MethodParameter;
+import org.springframework.core.ParameterNameDiscoverer;
+import org.springframework.web.method.HandlerMethod;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
+
+public class LoggingHandlerMethodInterceptor extends HandlerInterceptorAdapter {
+
+	private static Logger logger = LoggerFactory.getLogger(LoggingHandlerMethodInterceptor.class);
+
+	private final ParameterNameDiscoverer parameterNameDiscoverer = new LocalVariableTableParameterNameDiscoverer();
+
+	@Override
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+		if (handler instanceof HandlerMethod) {
+			logger.debug(asString((HandlerMethod) handler));
+		}
+		return true;
+	}
+
+	@Override
+	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+					throws Exception {
+	}
+
+	@Override
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView)
+					throws Exception {
+	}
+
+	private String asString(HandlerMethod handlerMethod) {
+		StringBuilder sb = new StringBuilder();
+		sb.append("\nController:\n").append(handlerMethod.getBeanType().getSimpleName());
+		sb.append("\nMethod:\n");
+		sb.append(handlerMethod.getMethod().getReturnType().getSimpleName()).append(" ");
+		sb.append(handlerMethod.getMethod().getName()).append("(");
+		for (MethodParameter param : handlerMethod.getMethodParameters()) {
+			param.initParameterNameDiscovery(this.parameterNameDiscoverer);
+			for (Annotation annotation : param.getParameterAnnotations()) {
+				sb.append(annotation).append(" ");
+			}
+			sb.append(param.getParameterType().getSimpleName()).append(" ");
+			sb.append(param.getParameterName());
+			if (param.getParameterIndex() < handlerMethod.getMethodParameters().length - 1) {
+				sb.append(" ");
+			}
+		}
+		sb.append(")\n");
+		return sb.toString();
+	}
+
+}

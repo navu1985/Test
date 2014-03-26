@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:security="http://www.springframework.org/schema/security"
+	xsi:schemaLocation="
+			http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+			http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+			http://www.springframework.org/schema/security
+			http://www.springframework.org/schema/security/spring-security-3.1.xsd">
+
+
+	<security:http pattern="/static/**" security="none"/>
+	<bean id="webexpressionHandler" class="org.springframework.security.web.access.expression.DefaultWebSecurityExpressionHandler" /> 
+	<!-- <security:http pattern="/surveyServer/**" create-session="stateless">
+		<security:intercept-url pattern="/**" access="ROLE_USER,ROLE_ADMIN"/>
+		<security:http-basic/>
+	</security:http> -->  
+	
+	<security:http auto-config="true">
+		<security:intercept-url pattern="/login" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/signup/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/forgetpassword/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/changepassword/**" access="IS_AUTHENTICATED_ANONYMOUSLY" />
+		<security:intercept-url pattern="/surveyServer/**" access="IS_AUTHENTICATED_ANONYMOUSLY"/>
+		<security:intercept-url pattern="/admin/**" access="ROLE_ADMIN" />
+		<security:intercept-url pattern="/**" access="ROLE_ADMIN,ROLE_USER" />
+		<security:form-login  login-page="/login" authentication-failure-url="/login?error=true" 
+			authentication-failure-handler-ref="authenticationFailureHandler"
+			authentication-success-handler-ref="authenticationSuccessHandler"
+			always-use-default-target="false"/>
+		<security:session-management>
+        	<security:concurrency-control max-sessions="1" error-if-maximum-exceeded="true" />
+    	</security:session-management>
+	</security:http>
+	
+	<security:authentication-manager>
+		<security:authentication-provider user-service-ref="userService">
+			<security:password-encoder hash="sha"/>
+		</security:authentication-provider>
+	</security:authentication-manager>
+	
+	<bean id="authenticationFailureHandler" class="com.datacert.portal.infrastructure.PortalAuthenticationFailureHandler">
+		<property name="portalLoginTries" value="5"/>
+	</bean>
+	
+	<bean id="authenticationSuccessHandler" class="com.datacert.portal.infrastructure.PortalAuthenticationSuccessHandler"/>
+</beans>

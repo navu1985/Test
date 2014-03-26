@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<import resource="classpath:surveysystem-usercontext.xml"/>
+	<import resource="security.xml" />
+	
+	 <bean id="onAppStartService" class="com.datacert.portal.infrastructure.PortalContextListner" 
+		init-method="initIt" destroy-method="cleanUp">
+	</bean> 
+	
+	<bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="cacheSeconds" value="0" />
+	</bean>
+</beans>

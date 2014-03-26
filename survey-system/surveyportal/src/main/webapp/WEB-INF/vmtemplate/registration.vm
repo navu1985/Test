@@ -1,0 +1,15 @@
+<b>Hello</b>,
+<br/>
+<br/>
+Thank you for registering with Datacert.  Please click 
+<br/>
+<a href='${link}'>${link}</a>
+<br/>
+ to continue with your account activation.
+<br/>
+<br/>
+If you received this email in error, please forward this email to <a>Support@datacert.com</a>.
+<br/>
+<br/>
+Thank you,<br>
+Support, Datacert
